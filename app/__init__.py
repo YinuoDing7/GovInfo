@@ -29,4 +29,7 @@ def create_app(config_name='default'):
     from app import routes, models
     app.register_blueprint(routes.bp)
 
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+
     return app
