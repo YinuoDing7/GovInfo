@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings - GovInfo{% endblock %}
+
+{% block content %}
+<div class="layui-card">
+  <div class="layui-card-header">System Settings</div>
+  <div class="layui-card-body">
+    <form class="layui-form" action="{{ url_for('admin.settings') }}" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">App Name</label>
+        <div class="layui-input-block">
+          <input type="text" name="app_name" required lay-verify="required" value="{{ app_name }}" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="formDemo">Save Settings</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+layui.use('form', function(){
+  var form = layui.form;
+});
+</script>
+{% endblock %}

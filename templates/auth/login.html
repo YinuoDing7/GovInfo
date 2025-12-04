@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login - Government Data Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login-left">
+        <div class="left-content">
+            <div class="platform-title">数据要素平台</div>
+            <div class="platform-desc">整合政务数据资源，实现数据要素高效配置与舆情智能分析</div>
+            
+            <div id="chart" class="chart-container"></div>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-label">数据覆盖率</div>
+                    <div class="stat-value">98.7%</div>
+                    <div style="font-size: 12px; color: #00ff00;">↑ 2.3% 环比增长</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">数据处理效率</div>
+                    <div class="stat-value">99.2%</div>
+                    <div style="font-size: 12px; color: #00ff00;">↑ 1.8% 环比增长</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">系统稳定性</div>
+                    <div class="stat-value">99.9%</div>
+                    <div style="font-size: 12px; color: #00ff00;">↑ 0.5% 环比增长</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="login-right">
+        <div class="login-form-box">
+            <div class="login-header">
+                <h2>政务数据平台</h2>
+                <p>请登录您的账号</p>
+            </div>
+            
+            <form class="layui-form" action="" method="post">
+                {% if error %}
+                <div style="color: red; margin-bottom: 10px; text-align: center;">{{ error }}</div>
+                {% endif %}
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="color: #ccc; width: auto; padding-left: 0;">用户名</label>
+                    <div class="layui-input-block" style="margin-left: 0;">
+                        <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="color: #ccc; width: auto; padding-left: 0;">密码</label>
+                    <div class="layui-input-block" style="margin-left: 0;">
+                        <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <input type="checkbox" name="remember_me" title="记住我" lay-skin="primary" style="color: white;">
+                    <a href="#" style="float: right; margin-top: 10px; color: #1E9FFF;">忘记密码?</a>
+                </div>
+                
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="login">安全登录 →</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="footer-links">
+            © 2023 政务数据要素平台 保留所有权利
+            <br>
+            <a href="#">帮助中心</a> | <a href="#">安全政策</a> | <a href="#">使用条款</a>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
+<script>
+layui.use(['form'], function(){
+    var form = layui.form;
+});
+
+// Initialize ECharts
+var chartDom = document.getElementById('chart');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['数据采集量', '数据处理量', '舆情分析量'],
+        textStyle: { color: '#fff' }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+        axisLabel: { color: '#fff' },
+        axisLine: { lineStyle: { color: '#333' } }
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel: { color: '#fff' },
+        splitLine: { lineStyle: { color: '#333' } }
+    },
+    series: [
+        {
+            name: '数据采集量',
+            type: 'bar',
+            data: [120, 132, 101, 134, 90, 230],
+            itemStyle: { color: '#1E9FFF' }
+        },
+        {
+            name: '数据处理量',
+            type: 'bar',
+            data: [220, 182, 191, 234, 290, 330],
+            itemStyle: { color: '#009688' }
+        },
+        {
+            name: '舆情分析量',
+            type: 'line',
+            data: [150, 232, 201, 154, 190, 330],
+            smooth: true,
+            itemStyle: { color: '#FFB800' }
+        }
+    ]
+};
+
+option && myChart.setOption(option);
+
+window.addEventListener('resize', myChart.resize);
+</script>
+</body>
+</html>

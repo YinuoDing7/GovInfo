@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - GovInfo{% endblock %}
+
+{% block content %}
+<div class="layui-card">
+  <div class="layui-card-header">User Management</div>
+  <div class="layui-card-body">
+    <button class="layui-btn" onclick="openAddUserModal()">Add User</button>
+    <table class="layui-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role.name }}</td>
+          <td>
+            <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="layui-btn layui-btn-danger layui-btn-xs" onclick="return confirm('Are you sure?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add User Modal (Hidden) -->
+<div id="addUserModal" style="display: none; padding: 20px;">
+  <form class="layui-form" action="{{ url_for('admin.add_user') }}" method="post">
+    <div class="layui-form-item">
+      <label class="layui-form-label">Username</label>
+      <div class="layui-input-block">
+        <input type="text" name="username" required lay-verify="required" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">Email</label>
+      <div class="layui-input-block">
+        <input type="email" name="email" required lay-verify="required" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">Password</label>
+      <div class="layui-input-block">
+        <input type="password" name="password" required lay-verify="required" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">Role</label>
+      <div class="layui-input-block">
+        <select name="role_id" lay-verify="required">
+          <option value="1">Admin</option>
+          <option value="2">User</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function openAddUserModal() {
+  layer.open({
+    type: 1,
+    title: 'Add User',
+    content: $('#addUserModal'),
+    area: ['500px', '400px']
+  });
+}
+layui.use('form', function(){
+  var form = layui.form;
+});
+</script>
+{% endblock %}

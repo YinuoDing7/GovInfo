@@ -1,14 +1,116 @@
 {% extends "base.html" %}
 
-{% block title %}Home - GovInfo{% endblock %}
+{% block title %}控制台 - 政企智能舆情分析{% endblock %}
 
 {% block content %}
-<div class="layui-card">
-  <div class="layui-card-header">Welcome</div>
-  <div class="layui-card-body">
-    Welcome to the GovInfo System based on Flask + Layui v2.13.2
-    <br><br>
-    <button class="layui-btn">Test Button</button>
+<div class="layui-row layui-col-space15">
+  <div class="layui-col-md3">
+    <div class="layui-card">
+      <div class="layui-card-header">总舆情量</div>
+      <div class="layui-card-body">
+        <h2 style="color: #1E9FFF;">12,345</h2>
+        <p>较昨日 <span style="color: red;">+12%</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="layui-col-md3">
+    <div class="layui-card">
+      <div class="layui-card-header">负面舆情</div>
+      <div class="layui-card-body">
+        <h2 style="color: #FF5722;">321</h2>
+        <p>较昨日 <span style="color: green;">-5%</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="layui-col-md3">
+    <div class="layui-card">
+      <div class="layui-card-header">待处理报告</div>
+      <div class="layui-card-body">
+        <h2 style="color: #FFB800;">15</h2>
+        <p>需尽快处理</p>
+      </div>
+    </div>
+  </div>
+  <div class="layui-col-md3">
+    <div class="layui-card">
+      <div class="layui-card-header">系统运行天数</div>
+      <div class="layui-card-body">
+        <h2 style="color: #009688;">365</h2>
+        <p>稳定运行中</p>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="layui-row layui-col-space15">
+  <div class="layui-col-md8">
+    <div class="layui-card">
+      <div class="layui-card-header">舆情趋势分析</div>
+      <div class="layui-card-body">
+        <div id="trendChart" style="width: 100%; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="layui-col-md4">
+    <div class="layui-card">
+      <div class="layui-card-header">舆情来源占比</div>
+      <div class="layui-card-body">
+        <div id="pieChart" style="width: 100%; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+var trendChart = echarts.init(document.getElementById('trendChart'));
+var trendOption = {
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['正面', '中立', '负面'] },
+    xAxis: {
+        type: 'category',
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    },
+    yAxis: { type: 'value' },
+    series: [
+        { name: '正面', type: 'line', stack: 'Total', data: [120, 132, 101, 134, 90, 230, 210] },
+        { name: '中立', type: 'line', stack: 'Total', data: [220, 182, 191, 234, 290, 330, 310] },
+        { name: '负面', type: 'line', stack: 'Total', data: [150, 232, 201, 154, 190, 330, 410] }
+    ]
+};
+trendChart.setOption(trendOption);
+
+var pieChart = echarts.init(document.getElementById('pieChart'));
+var pieOption = {
+    tooltip: { trigger: 'item' },
+    legend: { top: '5%', left: 'center' },
+    series: [
+        {
+            name: '来源',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+            label: { show: false, position: 'center' },
+            emphasis: { label: { show: true, fontSize: 40, fontWeight: 'bold' } },
+            labelLine: { show: false },
+            data: [
+                { value: 1048, name: '新闻媒体' },
+                { value: 735, name: '社交平台' },
+                { value: 580, name: '论坛博客' },
+                { value: 484, name: '短视频' },
+                { value: 300, name: '其他' }
+            ]
+        }
+    ]
+};
+pieChart.setOption(pieOption);
+
+window.onresize = function() {
+    trendChart.resize();
+    pieChart.resize();
+};
+</script>
 {% endblock %}

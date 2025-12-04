@@ -7,46 +7,86 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}"  media="all">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
 </head>
 <body>
   
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo layui-hide-xs layui-bg-black">GovInfo</div>
+    <div class="layui-logo layui-hide-xs layui-bg-black">政企智能舆情分析</div>
+    <!-- Header Left -->
     <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item layui-hide-xs"><a href="">Dashboard</a></li>
+      <li class="layui-nav-item layui-hide-xs"><a href="{{ url_for('main.index') }}">控制台</a></li>
+    </ul>
+    <!-- Header Right -->
+    <ul class="layui-nav layui-layout-right">
+      {% if current_user.is_authenticated %}
+      <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+        <a href="javascript:;">
+          <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+          {{ current_user.username }}
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">个人资料</a></dd>
+          <dd><a href="">安全设置</a></dd>
+          <dd><a href="{{ url_for('auth.logout') }}">退出登录</a></dd>
+        </dl>
+      </li>
+      {% else %}
+      <li class="layui-nav-item"><a href="{{ url_for('auth.login') }}">登录</a></li>
+      {% endif %}
     </ul>
   </div>
   
+  {% if current_user.is_authenticated %}
   <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
       <ul class="layui-nav layui-nav-tree" lay-filter="test">
         <li class="layui-nav-item layui-nav-itemed">
-          <a class="" href="javascript:;">System Menu</a>
+          <a class="" href="javascript:;">数据分析</a>
           <dl class="layui-nav-child">
-            <dd><a href="javascript:;">Menu 1</a></dd>
-            <dd><a href="javascript:;">Menu 2</a></dd>
+            <dd><a href="{{ url_for('main.index') }}">舆情概览</a></dd>
+            <dd><a href="javascript:;">最新报告</a></dd>
           </dl>
         </li>
+        {% if current_user.role.name == 'Admin' %}
+        <li class="layui-nav-item">
+          <a href="javascript:;">系统管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="{{ url_for('admin.users') }}">用户管理</a></dd>
+            <dd><a href="javascript:;">角色管理</a></dd>
+            <dd><a href="{{ url_for('admin.settings') }}">系统设置</a></dd>
+          </dl>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
+  {% endif %}
   
-  <div class="layui-body">
+  <div class="layui-body" {% if not current_user.is_authenticated %}style="left: 0;"{% endif %}>
     <div style="padding: 15px;">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="layui-alert">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+      
       {% block content %}{% endblock %}
     </div>
   </div>
   
-  <div class="layui-footer">
+  <div class="layui-footer" {% if not current_user.is_authenticated %}style="left: 0;"{% endif %}>
     <!-- Bottom fixed area -->
-    © GovInfo System
+    © 2023 政企智能舆情分析报告生成智能体应用系统
   </div>
 </div>
  
 <script src="{{ url_for('static', filename='layui/layui.js') }}" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
 <script>
-//JavaScript implementation
 layui.use(['element', 'layer', 'util'], function(){
   var element = layui.element
   ,layer = layui.layer
@@ -55,5 +95,6 @@ layui.use(['element', 'layer', 'util'], function(){
   
 });
 </script>
+{% block scripts %}{% endblock %}
 </body>
 </html>
